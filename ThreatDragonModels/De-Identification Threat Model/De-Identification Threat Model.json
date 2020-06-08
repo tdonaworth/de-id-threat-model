@@ -1,0 +1,16 @@
+{
+  "summary": {
+    "title": "De-Identification Threat Model",
+    "owner": "Tim Donawroth",
+    "description": "The de-identification service was designed to process large volumes of production data containing personally identifiable information (PII) and change the PII fields to synthetic data. The service will be used to enable Product Teams to have production-like data available for use in lower environments. Comprehensive test data is critical to better understanding of all use cases and developing correct program logic that serves both common use and edge case scenarios. The goal is that the Product Teams release well working code that is free of bugs and resilient to all data scenarios, as related to processing of common and uncommon (edge) cases."
+  },
+  "detail": {
+    "contributors": [
+      {
+        "name": "James Sullivan"
+      }
+    ],
+    "diagrams": [],
+    "reviewer": "Jesse Schoenemann"
+  }
+}
