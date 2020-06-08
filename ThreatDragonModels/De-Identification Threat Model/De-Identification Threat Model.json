@@ -10,7 +10,13 @@
         "name": "James Sullivan"
       }
     ],
-    "diagrams": [],
+    "diagrams": [
+      {
+        "title": "De-Identification",
+        "thumbnail": "./public/content/images/thumbnail.jpg",
+        "id": 0
+      }
+    ],
     "reviewer": "Jesse Schoenemann"
   }
 }
