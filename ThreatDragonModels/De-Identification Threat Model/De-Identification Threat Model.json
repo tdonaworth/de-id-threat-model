@@ -54,6 +54,8 @@
                 }
               ],
               "outOfScope": true,
+              "description": "Trusted ADO Data Engineer will provide the source data and pull the de-identified data.",
+              "reasonOutOfScope": "This is a known, trusted actor, and should be limited to those who have access to PII/PHI data already. All checks should be provided by the ADO prior to granting this level of access.",
               "attrs": {
                 ".element-shape": {
                   "class": "element-shape hasOpenThreats isOutOfScope"
@@ -137,6 +139,7 @@
                 }
               ],
               "outOfScope": true,
+              "reasonOutOfScope": "This routing service is managed by Ventech, and the de-identification process dependent on them to configure this corrently.",
               "attrs": {
                 ".element-shape": {
                   "class": "element-shape hasOpenThreats isOutOfScope"
@@ -165,6 +168,7 @@
               "hasOpenThreats": false,
               "outOfScope": true,
               "reasonOutOfScope": "Managed by HIVS",
+              "description": "Runs and orchastrates the jobs for performing the de-identification process. Generally ensures the EMR Cluster is stood up and tore down cleanly. This is typically managed by the ADO",
               "attrs": {
                 ".element-shape": {
                   "class": "element-shape hasNoOpenThreats isOutOfScope"
@@ -184,8 +188,8 @@
                 "height": 100
               },
               "position": {
-                "x": 45,
-                "y": 460
+                "x": 61,
+                "y": 407
               },
               "angle": 0,
               "id": "9c64384f-c03e-4ec4-8193-bb013afe875f",
@@ -196,21 +200,13 @@
               "threats": [
                 {
                   "ruleId": "13000296-b17d-4b72-9cc4-f5cc33f80e4c",
-                  "title": "Generic information disclosure threat",
+                  "title": "Information Disclosure Threat - EMR Vulnerabilities",
                   "type": "Information disclosure",
                   "status": "Open",
                   "severity": "Medium",
-                  "description": "A generic information disclosure threat",
-                  "$$hashKey": "object:307"
-                },
-                {
-                  "ruleId": "c1377855-ea20-4c97-8861-f95c364fb8d2",
-                  "title": "Generic elevation threat",
-                  "type": "Elevation of privilege",
-                  "status": "Open",
-                  "severity": "Medium",
-                  "description": "A generic elevation threat",
-                  "$$hashKey": "object:323"
+                  "description": "An actor could potentially exploit a vulnerability with the EMR stack itself. Because the stack consists of many software packages, ensuring all are up-to-date requires dilligence. The current version, v6.0, is current and exibits no known vulnerabilities.",
+                  "$$hashKey": "object:244",
+                  "mitigation": "Utilize the latest versions of EMR and monitor via security scanning tools to ensure all vulnerabilites are remediated in a timely manner. Adhere to SLAs for remediation when vulnerabilities are found. Access to the EMR Cluster itself is tightly controlled as well with access only to those within the De-Identification process team."
                 }
               ],
               "attrs": {
@@ -232,8 +228,8 @@
                 "height": 100
               },
               "position": {
-                "x": 321,
-                "y": 447
+                "x": 220,
+                "y": 403
               },
               "angle": 0,
               "id": "8083d3bd-e7f8-417f-b9c5-1e5d38e418e0",
@@ -258,8 +254,8 @@
                 "height": 100
               },
               "position": {
-                "x": 824,
-                "y": 398
+                "x": 625,
+                "y": 465
               },
               "angle": 0,
               "id": "cf31b964-8e5a-477b-9566-0eadc6bbc93e",
@@ -291,48 +287,50 @@
               "angle": 0,
               "id": "d6890753-3c48-4a44-9a69-3d39be7e5156",
               "z": 7,
-              "hasOpenThreats": true,
+              "hasOpenThreats": false,
               "isEncrypted": true,
               "threats": [
                 {
                   "ruleId": "4adaa48a-0345-4533-a189-64c98c4420dd",
-                  "title": "Generic tampering threat",
+                  "title": "Information Tampering",
                   "type": "Tampering",
-                  "status": "Open",
-                  "severity": "Medium",
-                  "description": "A generic tampering threat",
-                  "$$hashKey": "object:370"
-                },
-                {
-                  "ruleId": "87bc37e2-798e-4d68-bb96-feb1da26da48",
-                  "title": "Generic repudiation threat",
-                  "type": "Repudiation",
-                  "status": "Open",
-                  "severity": "Medium",
-                  "description": "A generic repudiation threat",
-                  "$$hashKey": "object:379"
+                  "status": "Mitigated",
+                  "severity": "Low",
+                  "description": "The general utilization of this information is a snapshot/copy of real data. Any tampering effort will only end up editing data which will either be de-identified or has already been de-identified. The risk only results in the usability of the final data.",
+                  "$$hashKey": "object:370",
+                  "mitigation": "Access to the data is restricted to only to an account created specifically for each de-id process iteration. ADO Data team also have access with their own federated credentials, and that part is out of scope."
                 },
                 {
                   "ruleId": "13000296-b17d-4b72-9cc4-f5cc33f80e4c",
-                  "title": "Generic information disclosure threat",
+                  "title": "Information disclosure threat of PII data",
                   "type": "Information disclosure",
-                  "status": "Open",
+                  "status": "Mitigated",
                   "severity": "High",
-                  "description": "A generic information disclosure threat",
-                  "$$hashKey": "object:388"
+                  "description": "The core purpose of the de-identification process is to ensure PII is not moved into lower environments. The process is highly dependent on the proper configuration of the schema files to ensure all data is properly de-identified. If a data-source contains additional data that is not configured to be de-identified, it may result in an end data source that contains PII/PHI still.  The starting data source as well contains PII/PHI as designed. Access to this information, and encryption in place should preven the disclosure of this information",
+                  "$$hashKey": "object:388",
+                  "mitigation": "Encryption at rest, and in transit shall be in place for these data sources at all time. Access is restricted via federated access controls for the ADO Data team, and limited to a single account created for a single use for each de-identification process. The data source is out of scope, and only the output data is considered in-scope for the de-identification process."
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "Medium",
+                  "type": "Spoofing",
+                  "title": "Access to production snapshot",
+                  "description": "Because the production snapshot is provided with a username/password to the de-identification process, that access could be spoofed, stolen, or guessed.",
+                  "mitigation": "The account which is created for de-identification only lives during that process. The credentials are shared using separate mediums, and short lived. The password is a randomly large password. Access of the account is monitored by the ADO Data Team",
+                  "$$hashKey": "object:236"
                 }
               ],
               "storesCredentials": false,
               "description": "Input/Ouput data source for data to be de-identified. The Input data will contain PII/PHI",
               "attrs": {
                 ".element-shape": {
-                  "class": "element-shape hasOpenThreats isInScope"
+                  "class": "element-shape hasNoOpenThreats isInScope"
                 },
                 "text": {
-                  "text": "Amazon RDS / Redshift"
+                  "text": "Datasource [Amazon\nRDS / Redshift / S3]"
                 },
                 ".element-text": {
-                  "class": "element-text hasOpenThreats isInScope"
+                  "class": "element-text hasNoOpenThreats isInScope"
                 }
               }
             },
@@ -343,8 +341,8 @@
                 "height": 80
               },
               "position": {
-                "x": 575,
-                "y": 406
+                "x": 856,
+                "y": 578
               },
               "angle": 0,
               "id": "1dbe8ff7-dd08-495a-86c4-b3834120ae68",
@@ -352,6 +350,18 @@
               "hasOpenThreats": false,
               "isALog": true,
               "isEncrypted": true,
+              "description": "Stores logs, or bulk data in the event of bulk de-identification. Data to be de-identified is stored here temporarily, while waiting for the Lambda listener to collect and de-identify it.",
+              "threats": [
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "type": "Information disclosure",
+                  "title": "Leakage of PII / PHI from the Data-Faker S3",
+                  "description": "The Data-Faker S3 is a temporary storage for data to be de-identified. The Lambda listener picks up on data placed here, and processes (de-identifies it). The S3 has a configurable \"cache\" period, to keep the data mostly for trouble-shooting and repeated de-identifictation. If this value is set too long, the data could be exposed",
+                  "mitigation": "The current storage period is only 24 hours, and then the data is securely deleted from the S3 bucket.",
+                  "$$hashKey": "object:722"
+                }
+              ],
               "attrs": {
                 ".element-shape": {
                   "class": "element-shape hasNoOpenThreats isInScope"
@@ -371,25 +381,57 @@
                 "height": 80
               },
               "position": {
-                "x": 1018,
-                "y": 408
+                "x": 868,
+                "y": 364
               },
               "angle": 0,
               "id": "5955d0aa-96ce-4d02-9d1d-add3aa00d3b4",
               "z": 9,
-              "hasOpenThreats": false,
-              "description": "Stores Data-Faker specific meta-data, and key identifiers.",
+              "hasOpenThreats": true,
+              "description": "Stores Data-Faker specific meta-data, and key identifiers. This data source is temporary (configurable but defaults to 24 hour existance). Contains PII/PHI within the meta-data.",
               "isEncrypted": true,
               "isALog": false,
+              "threats": [
+                {
+                  "ruleId": "4adaa48a-0345-4533-a189-64c98c4420dd",
+                  "title": "Tampering with identifier or de-identified data",
+                  "type": "Tampering",
+                  "status": "Mitigated",
+                  "severity": "Low",
+                  "description": "Data stored here could be at risk of tampering either with obtained connection keys or via an insider. Tampering of this data will only end up throwing off the de-identification process, and resulting in unmatched de-identified data. Altering anything other than the identifier will only result in mis-matched de-identified data between past and future records. Tampering with the identifier value, will result in future de-identification processes not matching any of the former de-identified data sets.",
+                  "mitigation": "This threat is mitigated by utilizing AWS's default DynamoDB encryption at rest, with keys stored in AWS KMS, using CMK.",
+                  "$$hashKey": "object:142"
+                },
+                {
+                  "ruleId": "87bc37e2-798e-4d68-bb96-feb1da26da48",
+                  "title": "DataFaker DB Access Repudiation",
+                  "type": "Repudiation",
+                  "status": "Open",
+                  "severity": "Low",
+                  "description": "All actions that take place on the DataFaker DB should be tracked and logged. Actions performed on the DataFaker DB shall be logged, especially for access/authentication attempts.\n\nAt this time, log levels are not consistent throughout the DataFaker process. Process Start/Stop are logged, but specific access attempts to the DynamoDB are not logged, nor are the query attempts.",
+                  "$$hashKey": "object:151"
+                },
+                {
+                  "ruleId": "13000296-b17d-4b72-9cc4-f5cc33f80e4c",
+                  "title": "Information disclosure of PII Identifier value",
+                  "type": "Information disclosure",
+                  "status": "Mitigated",
+                  "severity": "Low",
+                  "description": "The Identifier is stored as a key value for future de-identification lookup. These values, depending on how the process is configured, could contain the hashed PII identifier (HCIN or MBI). With this information, included with the de-identified information also in this database, one could produce a reverse correlation between de-identified data, and actual real-world data.",
+                  "mitigation": "The PII Identifier value is hashed using HMAC SHA256 with a strong 32-byte secret. The hashed values are stored encrypted at rest with AWS KMS Keys. Hashed values are transmitted utilizing TLS v1.2 encryption.",
+                  "$$hashKey": "object:160"
+                }
+              ],
+              "isSigned": true,
               "attrs": {
                 ".element-shape": {
-                  "class": "element-shape hasNoOpenThreats isInScope"
+                  "class": "element-shape hasOpenThreats isInScope"
                 },
                 "text": {
                   "text": "Data-Faker Storage\n[Dynamo DB]"
                 },
                 ".element-text": {
-                  "class": "element-text hasNoOpenThreats isInScope"
+                  "class": "element-text hasOpenThreats isInScope"
                 }
               }
             },
@@ -410,12 +452,27 @@
               },
               "vertices": [
                 {
-                  "x": 290,
-                  "y": 143
+                  "x": 285,
+                  "y": 115
                 }
               ],
               "id": "d534527c-fcf4-4008-a019-91f5040d979a",
               "z": 10,
+              "labels": [
+                {
+                  "position": {
+                    "distance": 0.2447020073345012,
+                    "offset": -3.0381893938156868
+                  },
+                  "attrs": {
+                    "text": {
+                      "text": "VPC Boundary",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
               "attrs": {}
             },
             {
@@ -435,7 +492,10 @@
               "id": "b1e1bcc9-e1f2-4010-9a32-c2dbb81cca7d",
               "labels": [
                 {
-                  "position": 0.5,
+                  "position": {
+                    "distance": 0.7023469586466531,
+                    "offset": -4.64807047212678
+                  },
                   "attrs": {
                     "text": {
                       "text": "VPC Connection",
@@ -503,10 +563,13 @@
               "id": "445d7101-55e5-4741-bb05-aaa160ea8c72",
               "labels": [
                 {
-                  "position": 0.5,
+                  "position": {
+                    "distance": 0.4225901360559621,
+                    "offset": -19.46858985992062
+                  },
                   "attrs": {
                     "text": {
-                      "text": "",
+                      "text": "Manage Data Sources",
                       "font-weight": "400",
                       "font-size": "small"
                     }
@@ -517,6 +580,8 @@
               "hasOpenThreats": false,
               "threats": [],
               "isEncrypted": true,
+              "description": "Secured connection to the Production VPC for administration of the PII/PHI Data Sources",
+              "protocol": "HTTPS, SSH",
               "attrs": {
                 ".marker-target": {
                   "class": "marker-target hasNoOpenThreats isInScope"
@@ -551,7 +616,7 @@
                   "position": 0.5,
                   "attrs": {
                     "text": {
-                      "text": "",
+                      "text": "Aminister via Jenkins",
                       "font-weight": "400",
                       "font-size": "small"
                     }
@@ -560,6 +625,9 @@
               ],
               "z": 13,
               "hasOpenThreats": false,
+              "isEncrypted": true,
+              "description": "HTTPS connection to Jenkins to administer the IaC of De-Identification.",
+              "protocol": "HTTPS",
               "attrs": {
                 ".marker-target": {
                   "class": "marker-target hasNoOpenThreats isInScope"
@@ -589,7 +657,7 @@
                   "position": 0.5,
                   "attrs": {
                     "text": {
-                      "text": "",
+                      "text": "IaC Build EMR Cluster",
                       "font-weight": "400",
                       "font-size": "small"
                     }
@@ -599,6 +667,8 @@
               "z": 14,
               "hasOpenThreats": false,
               "isEncrypted": true,
+              "description": "Jenkins kicks off the IaC (Terraform) to spin up the EMR Cluster (v6). Secured via HTTPS via private certificates.",
+              "protocol": "HTTPS, SSH",
               "attrs": {
                 ".marker-target": {
                   "class": "marker-target hasNoOpenThreats isInScope"
@@ -658,16 +728,24 @@
                 "id": "8083d3bd-e7f8-417f-b9c5-1e5d38e418e0"
               },
               "target": {
-                "id": "1dbe8ff7-dd08-495a-86c4-b3834120ae68"
+                "id": "cf31b964-8e5a-477b-9566-0eadc6bbc93e"
               },
-              "vertices": [],
+              "vertices": [
+                {
+                  "x": 450,
+                  "y": 451
+                }
+              ],
               "id": "33db0972-5de2-41c0-a095-a9e669bef359",
               "labels": [
                 {
-                  "position": 0.5,
+                  "position": {
+                    "distance": 0.5395925898082319,
+                    "offset": -28.207453915649946
+                  },
                   "attrs": {
                     "text": {
-                      "text": "",
+                      "text": "De-identify data (PII)",
                       "font-weight": "400",
                       "font-size": "small"
                     }
@@ -677,6 +755,7 @@
               "z": 16,
               "hasOpenThreats": false,
               "isEncrypted": true,
+              "description": "PII Identifiers are passed in, along with types of data, and qualifiers for shifted data.",
               "attrs": {
                 ".marker-target": {
                   "class": "marker-target hasNoOpenThreats isInScope"
@@ -699,14 +778,19 @@
               "target": {
                 "id": "cf31b964-8e5a-477b-9566-0eadc6bbc93e"
               },
-              "vertices": [],
+              "vertices": [
+                {
+                  "x": 778,
+                  "y": 609
+                }
+              ],
               "id": "e450310b-7750-4c45-90e6-161f932673a4",
               "labels": [
                 {
                   "position": 0.5,
                   "attrs": {
                     "text": {
-                      "text": "",
+                      "text": "Read S3",
                       "font-weight": "400",
                       "font-size": "small"
                     }
@@ -715,6 +799,8 @@
               ],
               "z": 17,
               "hasOpenThreats": false,
+              "description": "Logs, bulk data, and tmp data  are stored in S3.",
+              "isEncrypted": true,
               "attrs": {
                 ".marker-target": {
                   "class": "marker-target hasNoOpenThreats isInScope"
@@ -737,14 +823,19 @@
               "target": {
                 "id": "5955d0aa-96ce-4d02-9d1d-add3aa00d3b4"
               },
-              "vertices": [],
+              "vertices": [
+                {
+                  "x": 769,
+                  "y": 410
+                }
+              ],
               "id": "7d2edd35-a214-4c31-b3f3-acfec2fd427c",
               "labels": [
                 {
                   "position": 0.5,
                   "attrs": {
                     "text": {
-                      "text": "",
+                      "text": "Store Fake Data",
                       "font-weight": "400",
                       "font-size": "small"
                     }
@@ -753,6 +844,8 @@
               ],
               "z": 18,
               "hasOpenThreats": false,
+              "description": "Store hashed keys and generated fake data in DynamoDB",
+              "isEncrypted": true,
               "attrs": {
                 ".marker-target": {
                   "class": "marker-target hasNoOpenThreats isInScope"
@@ -777,8 +870,8 @@
               },
               "vertices": [
                 {
-                  "x": 623,
-                  "y": 266
+                  "x": 630,
+                  "y": 286
                 }
               ],
               "id": "479c059c-dba7-4b51-bb64-508c5043998a",
@@ -787,7 +880,7 @@
                   "position": 0.5,
                   "attrs": {
                     "text": {
-                      "text": "Input Source",
+                      "text": "Read PII data",
                       "font-weight": "400",
                       "font-size": "small"
                     }
@@ -797,6 +890,393 @@
               "z": 19,
               "hasOpenThreats": false,
               "isEncrypted": true,
+              "description": "Input data source, can be RDS, Redshift, S3 (flat files). The input source contains PII / PHI, and needs to be restricted.",
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "size": {
+                "width": 10,
+                "height": 10
+              },
+              "smooth": true,
+              "source": {
+                "id": "8083d3bd-e7f8-417f-b9c5-1e5d38e418e0"
+              },
+              "target": {
+                "id": "d6890753-3c48-4a44-9a69-3d39be7e5156"
+              },
+              "vertices": [
+                {
+                  "x": 530,
+                  "y": 255
+                }
+              ],
+              "id": "f698abbe-5d9e-4431-b1cd-f33e3654052f",
+              "labels": [
+                {
+                  "position": {
+                    "distance": 0.5719383081212314,
+                    "offset": -7.9668110536432
+                  },
+                  "attrs": {
+                    "text": {
+                      "text": "Write de-identified\ndata",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 20,
+              "hasOpenThreats": false,
+              "description": "The de-identified data is written back out, usually to the same source that was ingested. This data transmitted here should be de-identified and no longer contain PII/PHI, but this is reliant on the schema configuration, therefore should still be secured.",
+              "isEncrypted": true,
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Boundary",
+              "size": {
+                "width": 10,
+                "height": 10
+              },
+              "smooth": true,
+              "source": {
+                "x": 32,
+                "y": 329
+              },
+              "target": {
+                "x": 403,
+                "y": 534
+              },
+              "vertices": [
+                {
+                  "x": 338,
+                  "y": 339
+                }
+              ],
+              "id": "e11d4d68-0433-41c2-9d46-da88b38bee72",
+              "z": 21,
+              "labels": [
+                {
+                  "position": 0.5,
+                  "attrs": {
+                    "text": {
+                      "text": "Security Group",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "attrs": {}
+            },
+            {
+              "type": "tm.Boundary",
+              "size": {
+                "width": 10,
+                "height": 10
+              },
+              "smooth": true,
+              "source": {
+                "x": 615,
+                "y": 633
+              },
+              "target": {
+                "x": 917,
+                "y": 300
+              },
+              "vertices": [
+                {
+                  "x": 616,
+                  "y": 428
+                }
+              ],
+              "id": "8ca22555-2f66-4e83-9ef2-2ee7469fbe5e",
+              "z": 22,
+              "labels": [
+                {
+                  "position": 0.5,
+                  "attrs": {
+                    "text": {
+                      "text": "Security Group",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "attrs": {}
+            },
+            {
+              "type": "tm.Boundary",
+              "size": {
+                "width": 10,
+                "height": 10
+              },
+              "smooth": true,
+              "source": {
+                "x": 864,
+                "y": 11
+              },
+              "target": {
+                "x": 908,
+                "y": 252
+              },
+              "vertices": [
+                {
+                  "x": 832,
+                  "y": 114
+                },
+                {
+                  "x": 834,
+                  "y": 183
+                }
+              ],
+              "id": "0c060ed6-39e0-4d85-869f-e74b6a7b3d78",
+              "z": 23,
+              "labels": [
+                {
+                  "position": {
+                    "distance": 0.2825232168144589,
+                    "offset": 9.36417933228334
+                  },
+                  "attrs": {
+                    "text": {
+                      "text": "Security Group",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "attrs": {}
+            },
+            {
+              "type": "tm.Flow",
+              "size": {
+                "width": 10,
+                "height": 10
+              },
+              "smooth": true,
+              "source": {
+                "id": "cf31b964-8e5a-477b-9566-0eadc6bbc93e"
+              },
+              "target": {
+                "id": "8083d3bd-e7f8-417f-b9c5-1e5d38e418e0"
+              },
+              "vertices": [
+                {
+                  "x": 447,
+                  "y": 527
+                }
+              ],
+              "id": "fdeb497b-27b7-4145-aa22-cb954961806f",
+              "labels": [
+                {
+                  "position": {
+                    "distance": 0.4605716827446722,
+                    "offset": -26.29125828922923
+                  },
+                  "attrs": {
+                    "text": {
+                      "text": "Read data\n(de-identified)",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 24,
+              "hasOpenThreats": false,
+              "isEncrypted": true,
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Store",
+              "size": {
+                "width": 160,
+                "height": 80
+              },
+              "position": {
+                "x": 947,
+                "y": 472
+              },
+              "angle": 0,
+              "id": "15aca688-48e6-48f6-a3bc-f662b2a4fc5e",
+              "z": 25,
+              "hasOpenThreats": true,
+              "description": "Built in IAM Policies for controlling access to/from DynamoDB, S3, and interactions with Data-Faker Lambda services.",
+              "isEncrypted": true,
+              "storesCredentials": true,
+              "threats": [
+                {
+                  "status": "Open",
+                  "severity": "Medium",
+                  "type": "Elevation of privilege",
+                  "title": "Incorrect configuration / management of IAM Roles & Policies",
+                  "description": "IAM Roles and Policies are used to manage and restrict access to the Data-Faker service, Database, S3, and CloudWatch. If any roles are misconfigured, this could lead to elevated privilages of users which should not have access.",
+                  "mitigation": "Access to IAM roles and policies is tightly controlled. Roles are audited frequently for access, and any new access is reviewed prior to granting.",
+                  "$$hashKey": "object:728"
+                }
+              ],
+              "attrs": {
+                ".element-shape": {
+                  "class": "element-shape hasOpenThreats isInScope"
+                },
+                "text": {
+                  "text": "IAM Policies"
+                },
+                ".element-text": {
+                  "class": "element-text hasOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "size": {
+                "width": 10,
+                "height": 10
+              },
+              "smooth": true,
+              "source": {
+                "id": "15aca688-48e6-48f6-a3bc-f662b2a4fc5e"
+              },
+              "target": {
+                "id": "cf31b964-8e5a-477b-9566-0eadc6bbc93e"
+              },
+              "vertices": [],
+              "id": "c2e25784-3994-4ba3-b86c-a22fd570a766",
+              "labels": [
+                {
+                  "position": 0.5,
+                  "attrs": {
+                    "text": {
+                      "text": "IAM Policy",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 26,
+              "hasOpenThreats": false,
+              "isEncrypted": true,
+              "description": "IAM Policies applied to all Data-Faker processes and connections.",
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "size": {
+                "width": 10,
+                "height": 10
+              },
+              "smooth": true,
+              "source": {
+                "id": "5955d0aa-96ce-4d02-9d1d-add3aa00d3b4"
+              },
+              "target": {
+                "id": "cf31b964-8e5a-477b-9566-0eadc6bbc93e"
+              },
+              "vertices": [
+                {
+                  "x": 792,
+                  "y": 449
+                }
+              ],
+              "id": "eccd2938-c3af-4833-8107-a13c876f454c",
+              "labels": [
+                {
+                  "position": {
+                    "distance": 0.4756500927228672,
+                    "offset": -23.42736216750885
+                  },
+                  "attrs": {
+                    "text": {
+                      "text": "Read Fake Data",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 27,
+              "hasOpenThreats": false,
+              "description": "Reads previously generated fake data from DynamoDB based on the hashed key value.",
+              "isEncrypted": true,
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "size": {
+                "width": 10,
+                "height": 10
+              },
+              "smooth": true,
+              "source": {
+                "id": "cf31b964-8e5a-477b-9566-0eadc6bbc93e"
+              },
+              "target": {
+                "id": "1dbe8ff7-dd08-495a-86c4-b3834120ae68"
+              },
+              "vertices": [
+                {
+                  "x": 812,
+                  "y": 574
+                }
+              ],
+              "id": "60fde180-a03e-402a-af5d-d65cbca8c0c1",
+              "labels": [
+                {
+                  "position": 0.5,
+                  "attrs": {
+                    "text": {
+                      "text": "Write to S3",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 28,
+              "hasOpenThreats": false,
+              "isEncrypted": true,
+              "description": "Logs, bulk data, and tmp data  are stored in S3.",
               "attrs": {
                 ".marker-target": {
                   "class": "marker-target hasNoOpenThreats isInScope"
@@ -873,134 +1353,6 @@
               }
             },
             {
-              "type": "tm.Process",
-              "size": {
-                "width": 100,
-                "height": 100
-              },
-              "position": {
-                "x": 114,
-                "y": 134
-              },
-              "angle": 0,
-              "id": "3a47b5e6-8877-45e3-8f83-d0d2b7c706fd",
-              "z": 3,
-              "hasOpenThreats": false,
-              "attrs": {
-                ".element-shape": {
-                  "class": "element-shape hasNoOpenThreats isInScope"
-                },
-                "text": {
-                  "text": "POST\n/data-faker"
-                },
-                ".element-text": {
-                  "class": "element-text hasNoOpenThreats isInScope"
-                }
-              }
-            },
-            {
-              "type": "tm.Process",
-              "size": {
-                "width": 100,
-                "height": 100
-              },
-              "position": {
-                "x": 115,
-                "y": 256
-              },
-              "angle": 0,
-              "id": "f8b63116-b01d-4331-b312-37ee51d17288",
-              "z": 4,
-              "hasOpenThreats": false,
-              "attrs": {
-                ".element-shape": {
-                  "class": "element-shape hasNoOpenThreats isInScope"
-                },
-                "text": {
-                  "text": "GET /data-faker\n(uuid)"
-                },
-                ".element-text": {
-                  "class": "element-text hasNoOpenThreats isInScope"
-                }
-              }
-            },
-            {
-              "type": "tm.Flow",
-              "size": {
-                "width": 10,
-                "height": 10
-              },
-              "smooth": true,
-              "source": {
-                "id": "ce99bec3-9e9d-4406-a02c-62cd2cd92a04"
-              },
-              "target": {
-                "id": "f8b63116-b01d-4331-b312-37ee51d17288"
-              },
-              "vertices": [],
-              "id": "d07680a9-b1ff-4af2-9ac6-a00a401ff329",
-              "labels": [
-                {
-                  "position": 0.5,
-                  "attrs": {
-                    "text": {
-                      "text": "",
-                      "font-weight": "400",
-                      "font-size": "small"
-                    }
-                  }
-                }
-              ],
-              "z": 5,
-              "hasOpenThreats": false,
-              "attrs": {
-                ".marker-target": {
-                  "class": "marker-target hasNoOpenThreats isInScope"
-                },
-                ".connection": {
-                  "class": "connection hasNoOpenThreats isInScope"
-                }
-              }
-            },
-            {
-              "type": "tm.Flow",
-              "size": {
-                "width": 10,
-                "height": 10
-              },
-              "smooth": true,
-              "source": {
-                "id": "3a47b5e6-8877-45e3-8f83-d0d2b7c706fd"
-              },
-              "target": {
-                "id": "ce99bec3-9e9d-4406-a02c-62cd2cd92a04"
-              },
-              "vertices": [],
-              "id": "435b2620-4986-43db-a131-a40b4e005575",
-              "labels": [
-                {
-                  "position": 0.5,
-                  "attrs": {
-                    "text": {
-                      "text": "",
-                      "font-weight": "400",
-                      "font-size": "small"
-                    }
-                  }
-                }
-              ],
-              "z": 6,
-              "hasOpenThreats": false,
-              "attrs": {
-                ".marker-target": {
-                  "class": "marker-target hasNoOpenThreats isInScope"
-                },
-                ".connection": {
-                  "class": "connection hasNoOpenThreats isInScope"
-                }
-              }
-            },
-            {
               "type": "tm.Flow",
               "size": {
                 "width": 10,
@@ -1045,8 +1397,8 @@
                 "height": 80
               },
               "position": {
-                "x": 979,
-                "y": 0
+                "x": 977,
+                "y": 28
               },
               "angle": 0,
               "id": "4b079189-f2f4-4e2c-993b-d3f5b4173c5a",
@@ -1071,13 +1423,14 @@
                 "height": 80
               },
               "position": {
-                "x": 1014,
-                "y": 204
+                "x": 961,
+                "y": 245
               },
               "angle": 0,
               "id": "0975c899-18f1-430d-ab87-671dcf02ab9d",
               "z": 9,
               "hasOpenThreats": false,
+              "description": "Contains PII / PHI",
               "attrs": {
                 ".element-shape": {
                   "class": "element-shape hasNoOpenThreats isInScope"
@@ -1097,8 +1450,8 @@
                 "height": 80
               },
               "position": {
-                "x": 739,
-                "y": 273
+                "x": 735,
+                "y": 361
               },
               "angle": 0,
               "id": "af080f59-b578-4c11-883b-40f2e510d6b8",
@@ -1123,8 +1476,8 @@
                 "height": 100
               },
               "position": {
-                "x": 761,
-                "y": 399
+                "x": 532,
+                "y": 393
               },
               "angle": 0,
               "id": "d707a5e3-6e66-41ea-bb78-70061469dcbf",
@@ -1181,12 +1534,7 @@
               "target": {
                 "id": "d707a5e3-6e66-41ea-bb78-70061469dcbf"
               },
-              "vertices": [
-                {
-                  "x": 646,
-                  "y": 398
-                }
-              ],
+              "vertices": [],
               "id": "50de7aa6-c087-4e81-a89a-3bf2cf3c66fc",
               "labels": [
                 {
@@ -1262,7 +1610,12 @@
               "target": {
                 "id": "0975c899-18f1-430d-ab87-671dcf02ab9d"
               },
-              "vertices": [],
+              "vertices": [
+                {
+                  "x": 927,
+                  "y": 199
+                }
+              ],
               "id": "0cf718d3-d394-49e9-9d18-6d3937a248e1",
               "labels": [
                 {
@@ -1302,8 +1655,12 @@
               },
               "vertices": [
                 {
-                  "x": 688,
-                  "y": 38
+                  "x": 700,
+                  "y": 42
+                },
+                {
+                  "x": 856,
+                  "y": 16
                 }
               ],
               "id": "655ef216-9997-45ef-9838-552c5deddf01",
@@ -1345,12 +1702,12 @@
               },
               "vertices": [
                 {
-                  "x": 722,
-                  "y": 89
+                  "x": 730,
+                  "y": 88
                 },
                 {
-                  "x": 920,
-                  "y": 88
+                  "x": 919,
+                  "y": 106
                 }
               ],
               "id": "3f3dc0fd-f9a7-43af-b260-fa66c50716cf",
@@ -1390,7 +1747,12 @@
               "target": {
                 "id": "3eda2f7f-8857-4cc6-a994-93e29ef8439b"
               },
-              "vertices": [],
+              "vertices": [
+                {
+                  "x": 763,
+                  "y": 285
+                }
+              ],
               "id": "4e93e13e-f331-46d3-a720-8664f670296b",
               "labels": [
                 {
@@ -1405,6 +1767,130 @@
                 }
               ],
               "z": 19,
+              "hasOpenThreats": false,
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "size": {
+                "width": 10,
+                "height": 10
+              },
+              "smooth": true,
+              "source": {
+                "x": 126,
+                "y": 165
+              },
+              "target": {
+                "id": "ce99bec3-9e9d-4406-a02c-62cd2cd92a04"
+              },
+              "vertices": [],
+              "id": "4d5c4d1b-1e83-4bd2-9279-8704da82f7c7",
+              "labels": [
+                {
+                  "position": {
+                    "distance": 0.4354380846913457,
+                    "offset": -19.217118286653122
+                  },
+                  "attrs": {
+                    "text": {
+                      "text": "POST",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 20,
+              "hasOpenThreats": false,
+              "description": "POST (/data-faker) API Endpoint",
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "size": {
+                "width": 10,
+                "height": 10
+              },
+              "smooth": true,
+              "source": {
+                "id": "ce99bec3-9e9d-4406-a02c-62cd2cd92a04"
+              },
+              "target": {
+                "x": 120,
+                "y": 289
+              },
+              "vertices": [],
+              "id": "5a3f95bd-017d-4b3a-8860-ef4d7a0c3950",
+              "labels": [
+                {
+                  "position": {
+                    "distance": 0.5428798444538561,
+                    "offset": -17.576260187817923
+                  },
+                  "attrs": {
+                    "text": {
+                      "text": "GET",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 21,
+              "hasOpenThreats": false,
+              "description": "GET (/data-faker) API Endpoint",
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "size": {
+                "width": 10,
+                "height": 10
+              },
+              "smooth": true,
+              "source": {
+                "id": "d707a5e3-6e66-41ea-bb78-70061469dcbf"
+              },
+              "target": {
+                "id": "3eda2f7f-8857-4cc6-a994-93e29ef8439b"
+              },
+              "vertices": [],
+              "id": "cc927956-c67f-41b2-9237-8eff78a39a39",
+              "labels": [
+                {
+                  "position": 0.5,
+                  "attrs": {
+                    "text": {
+                      "text": "",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 22,
               "hasOpenThreats": false,
               "attrs": {
                 ".marker-target": {
